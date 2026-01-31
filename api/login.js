@@ -7,8 +7,8 @@ export default function handler(req, res) {
   const { username, password } = req.body;
 
   // ===== DATABASE ADMIN (AMAN DI SERVER) =====
-  const ADMIN_USERNAME = 'admin';
-  const ADMIN_PASSWORD = 'runzy123321'; // Password kamu aman di sini
+  const ADMIN_USERNAME = 'admin@runzy.online';
+  const ADMIN_PASSWORD = 'strunzynglz1982'; // Password kamu aman di sini
 
   if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
     // Jika benar, kirim status sukses
