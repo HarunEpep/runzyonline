@@ -156,6 +156,7 @@ html {
 .form-group input[type="text"],
 .form-group input[type="password"],
 .form-group input[type="url"],
+.form-group input[type="file"],
 .form-group textarea,
 .form-group select {
     padding: 0.9rem;
@@ -170,12 +171,24 @@ html {
 .form-group input[type="text"]:focus,
 .form-group input[type="password"]:focus,
 .form-group input[type="url"]:focus,
+.form-group input[type="file"]:focus,
 .form-group textarea:focus,
 .form-group select:focus {
     outline: none;
     border-color: var(--primary-purple);
     box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
     background: rgba(255, 255, 255, 1);
+}
+
+.form-group input[type="file"] {
+    padding: 0.6rem;
+    background: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+}
+
+.form-group .helper-text {
+    font-size: 0.85rem;
+    color: #6b7280;
 }
 
 .form-group textarea {

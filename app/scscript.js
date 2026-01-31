@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     let adminLoginToggle, logoutBtn;
+    let isAdminUser = false;
     function createAdminButtons() {
         navActions.innerHTML = '';
         adminLoginToggle = document.createElement('button');
@@ -278,20 +279,24 @@ document.addEventListener('DOMContentLoaded', function() {
         addScriptBtn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            if (auth.currentUser) {
+            if (isAdminUser) {
                 addScriptModal.classList.remove('hidden');
             } else {
                 showNotification('Harap login sebagai admin terlebih dahulu', 'danger');
+                adminLoginModal.classList.remove('hidden');
+                adminUsername.focus();
             }
         });
     }
 
     // ===== INITIAL UI STATE =====
     onAuthStateChanged(auth, function(user) {
+        isAdminUser = !!user;
         if (user) {
             showAdminUI();
         } else {
             hideAdminUI();
+            addScriptModal.classList.add('hidden');
         }
     });
 
