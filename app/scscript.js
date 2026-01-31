@@ -42,6 +42,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const adminPanel = document.getElementById('adminPanel');
     const addScriptBtn = document.getElementById('addScriptBtn');
+    
+    // Pastikan admin panel hidden di awal
+    if (adminPanel) {
+        adminPanel.classList.add('hidden');
+    }
 
     let adminLoginToggle, logoutBtn;
     function createAdminButtons() {
@@ -246,8 +251,33 @@ document.addEventListener('DOMContentLoaded', function() {
     closeLoginBtn.addEventListener('click', function() {
         adminLoginModal.classList.add('hidden');
     });
-    closeAddScriptBtn.addEventListener('click', function() {
+    
+    closeAddScriptBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         addScriptModal.classList.add('hidden');
+    });
+
+    // Close modal saat klik di luar container
+    adminLoginModal.addEventListener('click', function(e) {
+        if (e.target === adminLoginModal) {
+            adminLoginModal.classList.add('hidden');
+        }
+    });
+
+    addScriptModal.addEventListener('click', function(e) {
+        if (e.target === addScriptModal) {
+            addScriptModal.classList.add('hidden');
+        }
+    });
+
+    // ===== ADD SCRIPT BUTTON =====
+    addScriptBtn?.addEventListener('click', function() {
+        if (auth.currentUser) {
+            addScriptModal.classList.remove('hidden');
+        } else {
+            showNotification('Harap login sebagai admin terlebih dahulu', 'danger');
+        }
     });
 
     // ===== INITIAL UI STATE =====
