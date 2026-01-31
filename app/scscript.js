@@ -166,11 +166,17 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         try {
-            await auth.signInWithEmailAndPassword(username, password);
-            adminLoginModal.classList.add('hidden');
-            adminLoginForm.reset();
-            showNotification('Login berhasil!', 'success');
-            showAdminUI();
+            const userCredential = await auth.signInWithEmailAndPassword(username, password);
+            if (userCredential && userCredential.user) {
+                showNotification('Login berhasil!', 'success');
+                adminLoginModal.classList.add('hidden');
+                adminLoginForm.reset();
+                showAdminUI();
+            } else {
+                showNotification('Login gagal: User tidak ditemukan.', 'danger');
+                adminLoginModal.classList.remove('hidden');
+                hideAdminUI();
+            }
         } catch (err) {
             let msg = 'Login gagal: ';
             if (err.code === 'auth/user-not-found') msg += 'Email tidak terdaftar.';
@@ -178,6 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
             else if (err.code === 'auth/invalid-email') msg += 'Format email tidak valid.';
             else msg += err.message;
             showNotification(msg, 'danger');
+            adminLoginModal.classList.remove('hidden');
             hideAdminUI();
         }
     });
@@ -190,10 +197,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function showAdminUI() {
-        adminLoginToggle?.classList?.add('hidden');
-        logoutBtn?.classList?.remove('hidden');
-        adminPanel?.classList?.remove('hidden');
-        renderScripts();
+        if (auth.currentUser) {
+            adminLoginToggle?.classList?.add('hidden');
+            logoutBtn?.classList?.remove('hidden');
+            adminPanel?.classList?.remove('hidden');
+            renderScripts();
+        }
     }
     function hideAdminUI() {
         adminLoginToggle?.classList?.remove('hidden');
