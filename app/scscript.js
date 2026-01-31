@@ -2,10 +2,10 @@
 // SCRIPT BOT - ADMIN PANEL & FEATURES
 // ===================================
 
-// Firebase Modular Imports
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getDatabase, ref, push, set, remove, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+// Firebase Modular Imports (v10)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, ref, push, set, remove, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCGs-W8aNzfEidTbA9J77CL92ZahJqn8_I",
@@ -248,37 +248,43 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ===== BUTTONS =====
-    closeLoginBtn.addEventListener('click', function() {
+    closeLoginBtn?.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         adminLoginModal.classList.add('hidden');
     });
     
-    closeAddScriptBtn.addEventListener('click', function(e) {
+    closeAddScriptBtn?.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         addScriptModal.classList.add('hidden');
     });
 
     // Close modal saat klik di luar container
-    adminLoginModal.addEventListener('click', function(e) {
+    adminLoginModal?.addEventListener('click', function(e) {
         if (e.target === adminLoginModal) {
             adminLoginModal.classList.add('hidden');
         }
     });
 
-    addScriptModal.addEventListener('click', function(e) {
+    addScriptModal?.addEventListener('click', function(e) {
         if (e.target === addScriptModal) {
             addScriptModal.classList.add('hidden');
         }
     });
 
     // ===== ADD SCRIPT BUTTON =====
-    addScriptBtn?.addEventListener('click', function() {
-        if (auth.currentUser) {
-            addScriptModal.classList.remove('hidden');
-        } else {
-            showNotification('Harap login sebagai admin terlebih dahulu', 'danger');
-        }
-    });
+    if (addScriptBtn) {
+        addScriptBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (auth.currentUser) {
+                addScriptModal.classList.remove('hidden');
+            } else {
+                showNotification('Harap login sebagai admin terlebih dahulu', 'danger');
+            }
+        });
+    }
 
     // ===== INITIAL UI STATE =====
     onAuthStateChanged(auth, function(user) {

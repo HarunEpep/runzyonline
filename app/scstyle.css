@@ -106,6 +106,8 @@ html {
     box-shadow: 0 20px 60px rgba(124, 58, 237, 0.3);
     animation: slideDown 0.3s ease-out;
     border: 2px solid rgba(255, 255, 255, 0.5);
+    position: relative;
+    pointer-events: all;
 }
 
 .login-header {
@@ -241,6 +243,8 @@ html {
     box-shadow: 0 20px 60px rgba(124, 58, 237, 0.3);
     animation: slideDown 0.3s ease-out;
     border: 2px solid rgba(255, 255, 255, 0.5);
+    position: relative;
+    pointer-events: all;
 }
 
 .modal-header {
@@ -271,8 +275,10 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2001;
+    z-index: 3000;
     position: relative;
+    pointer-events: all;
+    flex-shrink: 0;
 }
 
 .btn-close:hover {
