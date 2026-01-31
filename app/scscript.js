@@ -178,6 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
             else if (err.code === 'auth/invalid-email') msg += 'Format email tidak valid.';
             else msg += err.message;
             showNotification(msg, 'danger');
+            hideAdminUI();
         }
     });
 
