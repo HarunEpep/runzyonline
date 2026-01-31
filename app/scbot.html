@@ -18,9 +18,9 @@
             <form id="adminLoginForm" class="login-form">
                 <div class="form-group">
                     <label for="adminUsername">
-                        <i class="fas fa-user"></i> Username
+                        <i class="fas fa-user"></i> Email
                     </label>
-                    <input type="text" id="adminUsername" name="adminUsername" required placeholder="Masukkan username">
+                    <input type="email" id="adminUsername" name="adminUsername" required placeholder="Masukkan email admin">
                 </div>
                 <div class="form-group">
                     <label for="adminPassword">
@@ -131,22 +131,6 @@
         </div>
     </footer>
 
-    <script src="scscript.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyCGs-W8aNzfEidTbA9J77CL92ZahJqn8_I",
-        authDomain: "runzyweb.firebaseapp.com",
-        databaseURL: "https://runzyweb-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "runzyweb",
-        storageBucket: "runzyweb.firebasestorage.app",
-        messagingSenderId: "701587941397",
-        appId: "1:701587941397:web:94c2390a6e5d40d0e2061c",
-        measurementId: "G-XD4KLX0DYD"
-      };
-      firebase.initializeApp(firebaseConfig);
-    </script>
+    <script type="module" src="scscript.js"></script>
 </body>
 </html>

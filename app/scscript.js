@@ -2,6 +2,25 @@
 // SCRIPT BOT - ADMIN PANEL & FEATURES
 // ===================================
 
+// Firebase Modular Imports
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, push, set, remove, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCGs-W8aNzfEidTbA9J77CL92ZahJqn8_I",
+  authDomain: "runzyweb.firebaseapp.com",
+  databaseURL: "https://runzyweb-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "runzyweb",
+  storageBucket: "runzyweb.firebasestorage.app",
+  messagingSenderId: "701587941397",
+  appId: "1:701587941397:web:94c2390a6e5d40d0e2061c",
+  measurementId: "G-XD4KLX0DYD"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const auth = getAuth(app);
+
 document.addEventListener('DOMContentLoaded', function() {
     // ===== ADMIN CONFIGURATION =====
    
@@ -16,8 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const addScriptForm = document.getElementById('addScriptForm');
     const closeAddScriptBtn = document.getElementById('closeAddScriptBtn');
     const navActions = document.getElementById('navActions');
-    const notification = document.getElementById('notification');
-    const notificationText = document.getElementById('notificationText');
 
     // ===== MODAL & BUTTONS =====
     adminLoginModal.classList.add('hidden');
@@ -46,34 +63,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         logoutBtn.addEventListener('click', function() {
-            sessionStorage.removeItem('isAdmin');
-            adminLoginForm.reset();
-            hideAdminUI();
-            showNotification('Logout berhasil!', 'success');
+            signOut(auth).then(() => {
+                showNotification('Logout berhasil!', 'success');
+                hideAdminUI();
+            });
         });
     }
     createAdminButtons();
 
-    // ===== FIREBASE LOGIC =====
-    const db = firebase.database();
-    const auth = firebase.auth();
-
     // ====== CRUD SCRIPT DARI FIREBASE ======
     function fetchScriptsFromFirebase(callback) {
-        db.ref('scripts').once('value', (snapshot) => {
-            const val = snapshot.val();
-            const arr = val ? Object.entries(val).map(([id, data]) => ({ id, ...data })) : [];
-            callback(arr);
-        });
+      onValue(ref(db, 'scripts'), (snapshot) => {
+        const val = snapshot.val();
+        const arr = val ? Object.entries(val).map(([id, data]) => ({ id, ...data })) : [];
+        callback(arr);
+      });
     }
 
     function addScriptToFirebase(script, callback) {
-        const ref = db.ref('scripts').push();
-        ref.set(script, callback);
+      const newRef = push(ref(db, 'scripts'));
+      set(newRef, script).then(() => callback && callback()).catch(callback);
     }
 
     function deleteScriptFromFirebase(id, callback) {
-        db.ref('scripts/' + id).remove(callback);
+      remove(ref(db, 'scripts/' + id)).then(() => callback && callback()).catch(callback);
     }
 
     // ====== RENDER SCRIPTS (FIREBASE) ======
@@ -166,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         try {
-            const userCredential = await auth.signInWithEmailAndPassword(username, password);
+            const userCredential = await signInWithEmailAndPassword(auth, username, password);
             if (userCredential && userCredential.user) {
                 showNotification('Login berhasil!', 'success');
                 adminLoginModal.classList.add('hidden');
@@ -190,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     logoutBtn?.addEventListener('click', function() {
-        auth.signOut().then(() => {
+        signOut(auth).then(() => {
             showNotification('Logout berhasil!', 'success');
             hideAdminUI();
         });
@@ -213,13 +226,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ===== NOTIFICATION =====
     function showNotification(message, type) {
-        if (!notification || !notificationText) return;
-        notificationText.textContent = message;
+        // Buat notifikasi toast jika tidak ada element
+        let notification = document.getElementById('notification');
+        if (!notification) {
+            notification = document.createElement('div');
+            notification.id = 'notification';
+            notification.className = 'notification';
+            document.body.appendChild(notification);
+        }
+        notification.textContent = message;
         notification.className = 'notification ' + type;
-        notification.classList.remove('hidden');
+        notification.style.display = 'flex';
         setTimeout(() => {
-            notification.classList.add('hidden');
-        }, 2000);
+            notification.style.display = 'none';
+        }, 3000);
     }
 
     // ===== BUTTONS =====
@@ -231,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ===== INITIAL UI STATE =====
-    auth.onAuthStateChanged(function(user) {
+    onAuthStateChanged(auth, function(user) {
         if (user) {
             showAdminUI();
         } else {
