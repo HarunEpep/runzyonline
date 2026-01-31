@@ -172,7 +172,12 @@ document.addEventListener('DOMContentLoaded', function() {
             showNotification('Login berhasil!', 'success');
             showAdminUI();
         } catch (err) {
-            showNotification('Login gagal: ' + err.message, 'danger');
+            let msg = 'Login gagal: ';
+            if (err.code === 'auth/user-not-found') msg += 'Email tidak terdaftar.';
+            else if (err.code === 'auth/wrong-password') msg += 'Password salah.';
+            else if (err.code === 'auth/invalid-email') msg += 'Format email tidak valid.';
+            else msg += err.message;
+            showNotification(msg, 'danger');
         }
     });
 
