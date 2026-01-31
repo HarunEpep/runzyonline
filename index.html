@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Runzy Nglz - Dashboard</title>
+    <link rel="stylesheet" href="dash.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand-container">
+                <img src="profil.png" alt="Profil" class="nav-profile-pic">
+                <div class="nav-brand">Runzy Nglz</div>
+            </div>
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="server/menu.html">Menu</a></li>
+                <li><a href="app/scbot.html">Script Bot</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="dashboard" class="hero-section">
+        <div class="hero-content">
+            <div class="hero-icon">
+                <i class="fas fa-rocket"></i>
+            </div>
+            <h1 class="hero-title">Runzy Nglz</h1>
+            <p class="hero-version">v1.0.0</p>
+            <p class="hero-quote">Setiap langkah kecil yang kamu ambil hari ini akan membawa kamu lebih dekat ke impianmu.</p>
+            <a href="app/scbot.html" class="btn btn-primary">
+                <i class="fas fa-code"></i> Lihat Script Bot
+            </a>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="stats-section">
+        <div class="container">
+            <h2 class="section-title">Statistik Dashboard</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon stat-purple"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-number">1.250</span>
+                        <span class="stat-label">Total User</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-blue"><i class="fas fa-code"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-number">12</span>
+                        <span class="stat-label">Script Tersedia</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-green"><i class="fas fa-download"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-number">8.900+</span>
+                        <span class="stat-label">Total Download</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-yellow"><i class="fas fa-server"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-number">Online</span>
+                        <span class="stat-label">Status Server</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 Runzy Nglz. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Script Bot - Runzy Nglz</title>
+    <link rel="stylesheet" href="scstyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="modal-overlay">
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Admin Access</h2>
+                <p>Login untuk menambah script baru</p>
+            </div>
+            <form id="adminLoginForm" class="login-form">
+                <div class="form-group">
+                    <label for="adminUsername">
+                        <i class="fas fa-user"></i> Username
+                    </label>
+                    <input type="text" id="adminUsername" name="adminUsername" required placeholder="Masukkan username">
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <input type="password" id="adminPassword" name="adminPassword" required placeholder="Masukkan password">
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            <button id="closeLoginBtn" class="btn-close-login">Tutup</button>
+        </div>
+    </div>
+
+    <!-- Add Script Modal -->
+    <div id="addScriptModal" class="modal-overlay">
+        <div class="add-script-container">
+            <div class="modal-header">
+                <h2>Tambah Script Baru</h2>
+                <button type="button" class="btn-close" id="closeAddScriptBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addScriptForm" class="add-script-form">
+                <div class="form-group">
+                    <label for="scriptName">Nama Script</label>
+                    <input type="text" id="scriptName" required placeholder="Contoh: Baileys Simple Bot">
+                </div>
+                <div class="form-group">
+                    <label for="scriptImage">Gambar Script</label>
+                    <input type="file" id="scriptImage" accept="image/*">
+                    <span style="font-size:0.9em;color:#888;">atau masukkan link gambar di bawah</span>
+                    <input type="url" id="scriptImageUrl" placeholder="https://link-gambar.com/gambar.jpg">
+                </div>
+                <div class="form-group">
+                    <label for="scriptCategory">Kategori</label>
+                    <select id="scriptCategory" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="whatsapp">WhatsApp Bot</option>
+                        <option value="telegram">Telegram Bot</option>
+                        <option value="discord">Discord Bot</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="scriptDesc">Deskripsi</label>
+                    <textarea id="scriptDesc" required placeholder="Deskripsi singkat tentang script"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="scriptFeatures">Fitur (pisahkan dengan koma)</label>
+                    <input type="text" id="scriptFeatures" required placeholder="Fitur 1, Fitur 2, Fitur 3">
+                </div>
+                <div class="form-group">
+                    <label for="scriptBadge">Badge</label>
+                    <select id="scriptBadge" required>
+                        <option value="badge-new">Populer</option>
+                        <option value="badge-updated">Update</option>
+                        <option value="badge-hot">Hot</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="scriptGithub">Link GitHub</label>
+                    <input type="url" id="scriptGithub" required placeholder="https://github.com/...">
+                </div>
+                <div class="form-group">
+                    <label for="scriptLink">Link Download/Akses</label>
+                    <input type="url" id="scriptLink" required placeholder="https://...">
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-plus"></i> Tambah Script
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-brand">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </a>
+            <h1 class="nav-title">Script Bot Collection</h1>
+            <div class="nav-actions" id="navActions">
+                <!-- Tombol Admin disembunyikan sampai tidak ada yang login -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Panel (muncul setelah login) -->
+    <div id="adminPanel" class="admin-panel hidden">
+        <button id="addScriptBtn" class="btn-add-script">
+            <i class="fas fa-plus-circle"></i> Tambah Script Baru
+        </button>
+    </div>
+
+    <!-- Daftar Script Dinamis -->
+    <section id="scriptListSection">
+        <h2>Daftar Script</h2>
+        <div id="scriptListContainer">
+            <!-- Script akan dirender di sini -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 Runzy Nglz Script Collection. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="scscript.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyCGs-W8aNzfEidTbA9J77CL92ZahJqn8_I",
+        authDomain: "runzyweb.firebaseapp.com",
+        databaseURL: "https://runzyweb-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "runzyweb",
+        storageBucket: "runzyweb.firebasestorage.app",
+        messagingSenderId: "701587941397",
+        appId: "1:701587941397:web:94c2390a6e5d40d0e2061c",
+        measurementId: "G-XD4KLX0DYD"
+      };
+      firebase.initializeApp(firebaseConfig);
+    </script>
+</body>
+</html>
