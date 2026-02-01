@@ -578,6 +578,30 @@ html {
     gap: 2rem;
 }
 
+/* ===== SCRIPT PRICE ===== */
+.script-price {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1rem;
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border-left: 4px solid var(--success);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #166534;
+}
+
+.script-price i {
+    color: var(--success);
+    font-size: 1.2rem;
+}
+
+.script-price strong {
+    color: #15803d;
+    font-weight: 700;
+}
+
 /* ===== SCRIPT CARD ===== */
 .script-card {
     background: rgba(255, 255, 255, 0.9);
@@ -737,6 +761,32 @@ html {
 }
 .btn-beli:hover {
     background: linear-gradient(135deg, #128c7e, #25d366);
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+}
+
+/* Tombol Download (untuk script FREE) */
+.btn-download {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #fff;
+    border: none;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.10);
+}
+.btn-download i {
+    font-size: 1.2rem;
+}
+.btn-download:hover {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: #fff;
     transform: translateY(-2px) scale(1.04);
 }

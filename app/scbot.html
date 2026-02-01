@@ -6,6 +6,7 @@
     <title>Script Bot - Runzy Nglz</title>
     <link rel="stylesheet" href="scstyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <!-- Admin Login Modal -->
@@ -16,6 +17,12 @@
                 <p>Login untuk mengelola script</p>
             </div>
             <form id="adminLoginForm" class="login-form">
+                <div class="form-group">
+                    <label for="adminUsername">
+                        <i class="fas fa-user"></i> Username Admin
+                    </label>
+                    <input type="text" id="adminUsername" name="adminUsername" required placeholder="Masukkan username admin">
+                </div>
                 <div class="form-group">
                     <label for="adminPassword">
                         <i class="fas fa-lock"></i> Password Admin
@@ -70,8 +77,17 @@
                     <input type="text" id="scriptFeatures" required placeholder="Fitur 1, Fitur 2, Fitur 3">
                 </div>
                 <div class="form-group">
+                    <label for="scriptPrice">Harga Script</label>
+                    <input type="text" id="scriptPrice" required placeholder="Contoh: Rp 50.000 atau FREE">
+                </div>
+                <div class="form-group">
                     <label for="scriptYoutube">Link YouTube Preview</label>
                     <input type="url" id="scriptYoutube" required placeholder="https://youtube.com/...">
+                </div>
+                <div class="form-group">
+                    <label for="scriptDownload">Link Download (Opsional - untuk script FREE)</label>
+                    <input type="url" id="scriptDownload" placeholder="https://github.com/... atau https://drive.google.com/...">
+                    <span class="helper-text">Jika diisi, tombol "Beli" akan berubah menjadi "Download"</span>
                 </div>
                 <div class="form-group">
                     <label for="scriptWaNumber">Nomor WhatsApp (tanpa +)</label>

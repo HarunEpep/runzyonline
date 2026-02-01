@@ -2,86 +2,72 @@
 // SCRIPT BOT - ADMIN PANEL SYSTEM
 // ===================================
 
-// Password Admin (ganti sesuai kebutuhan)
+// Konfigurasi Supabase - SILAKAN GANTI DENGAN PROJECT URL & ANON KEY ANDA
+// Buat table di Supabase bernama 'scripts' dengan kolom:
+// id (int8, primary key), name, image, badge, badgeText, description, features (json/text), price, youtubeLink, waNumber, downloadLink
+const SUPABASE_URL = "https://npwvzkypbhalfmsptlrh.supabase.co"; 
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wd3Z6a3lwYmhhbGZtc3B0bHJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5NTA3OTEsImV4cCI6MjA4NTUyNjc5MX0.RV1uUX-ihfOjjT8cryVUdEqD2uiQcYZSKVSdhNSBowg";
+const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+// Admin Credentials (ganti sesuai kebutuhan)
+const ADMIN_USERNAME = "admin";
 const ADMIN_PASSWORD = "admin123";
 
-// Key untuk localStorage
-const STORAGE_KEY = "runzy_scripts_data";
 const AUTH_KEY = "runzy_admin_auth";
 
-// Default data (hanya untuk inisialisasi pertama kali)
-const defaultScripts = [
-    {
-        name: "Baileys WhatsApp Bot",
-        image: "https://via.placeholder.com/300x180",
-        badge: "badge-new",
-        badgeText: "Populer",
-        description: "Bot WhatsApp multi-device dengan fitur lengkap dan stabil",
-        features: ["Multi-Device Support", "Auto Reply", "Download Media"],
-        youtubeLink: "https://youtube.com/@runzynglz",
-        waNumber: "6285194572459"
-    },
-    {
-        name: "Telegram Bot Advanced",
-        image: "https://via.placeholder.com/300x180",
-        badge: "badge-hot",
-        badgeText: "Hot",
-        description: "Bot Telegram dengan fitur admin panel dan database",
-        features: ["Admin Panel", "Database MySQL", "Auto Broadcast"],
-        youtubeLink: "https://youtube.com/@runzynglz",
-        waNumber: "6285194572459"
-    },
-    {
-        name: "Discord Music Bot",
-        image: "https://via.placeholder.com/300x180",
-        badge: "badge-updated",
-        badgeText: "Update",
-        description: "Bot Discord untuk memutar musik dengan kualitas HD",
-        features: ["HD Audio Quality", "Queue System", "Playlist Support"],
-        youtubeLink: "https://youtube.com/@runzynglz",
-        waNumber: "6285194572459"
-    }
-];
+// Cache untuk menyimpan data dari database secara lokal
+let localScripts = [];
+
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Script loaded successfully!');
     
     // Initialize
-    initializeData();
-    checkAuthStatus();
+    updateUIBasedOnAuth();
     setupEventListeners();
-    renderScripts();
+    fetchScripts(); // Akan memanggil renderScripts setelah data didapat
     
     console.log('Admin button element:', document.getElementById('adminLoginToggle'));
 
-    // ====== INITIALIZE DATA ======
-    function initializeData() {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (!stored) {
-            // First time, save default data
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultScripts));
+    // ====== FETCH SCRIPTS FROM SUPABASE ======
+    async function fetchScripts() {
+        if (!supabase) {
+            console.error("Supabase client belum diinisialisasi.");
+            return;
+        }
+        
+        try {
+            const { data, error } = await supabase
+                .from('scripts')
+                .select('*')
+                .order('created_at', { ascending: true });
+
+            if (error) throw error;
+            
+            localScripts = data.map(item => ({
+                ...item,
+                features: typeof item.features === 'string' ? item.features.split(',') : (Array.isArray(item.features) ? item.features : [])
+            }));
+            
+            renderScripts();
+        } catch (error) {
+            console.error("Error fetching scripts:", error);
+            // showNotification("Gagal memuat data", "danger");
         }
     }
 
-    // ====== GET SCRIPTS FROM LOCALSTORAGE ======
+    // ====== GET SCRIPTS (LOCALLY CACHED) ======
     function getScripts() {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        return stored ? JSON.parse(stored) : [];
+        return localScripts;
     }
 
-    // ====== SAVE SCRIPTS TO LOCALSTORAGE ======
-    function saveScripts(scripts) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(scripts));
-    }
+    // ====== SAVE TO SUPABASE (CREATE/UPDATE) ======
+    // Fungsi ini diganti logic langsung di event handler untuk support async
+
 
     // ====== CHECK AUTH STATUS ======
     function checkAuthStatus() {
         const isAuth = sessionStorage.getItem(AUTH_KEY) === 'true';
-        if (isAuth) {
-            showAdminUI();
-        } else {
-            hideAdminUI();
-        }
         return isAuth;
     }
 
@@ -90,14 +76,22 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('adminLoginToggle')?.classList.add('hidden');
         document.getElementById('logoutBtn')?.classList.remove('hidden');
         document.getElementById('adminPanel')?.classList.remove('hidden');
-        renderScripts();
     }
 
     function hideAdminUI() {
         document.getElementById('adminLoginToggle')?.classList.remove('hidden');
         document.getElementById('logoutBtn')?.classList.add('hidden');
         document.getElementById('adminPanel')?.classList.add('hidden');
-        renderScripts();
+    }
+
+    // ====== UPDATE UI BASED ON AUTH ======
+    function updateUIBasedOnAuth() {
+        const isAuth = checkAuthStatus();
+        if (isAuth) {
+            showAdminUI();
+        } else {
+            hideAdminUI();
+        }
     }
 
     // ====== RENDER SCRIPTS ======
@@ -132,12 +126,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Build image HTML
             let imgHtml = '';
-            if (script.image) {
-                imgHtml = `<div class="script-img-wrap"><img src="${script.image}" alt="${script.name}" class="script-img"></div>`;
+            if (script.image && script.image.trim() !== '') {
+                const imageUrl = script.image.startsWith('http') ? script.image : 'https://placehold.co/300x180/e0e0e0/666666/png?text=Script+Image';
+                imgHtml = `<div class="script-img-wrap"><img src="${imageUrl}" alt="${script.name}" class="script-img" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'padding:2rem;text-align:center;background:#f3f4f6;border-radius:12px;color:#666;\\'><i class=\\'fas fa-image\\' style=\\'font-size:3rem;margin-bottom:1rem;\\'></i><p>Gambar tidak tersedia</p></div>'"></div>`;
             }
 
             // Build WhatsApp message
             const waMessage = `Halo%20saya%20mau%20beli%20script%20${encodeURIComponent(script.name)}`;
+
+            // Determine if script has download link (for free scripts)
+            const hasDownload = script.downloadLink && script.downloadLink.trim() !== '';
+            const buyButtonHtml = hasDownload 
+                ? `<a href="${script.downloadLink}" class="btn btn-download" target="_blank">
+                       <i class="fas fa-download"></i> Download
+                   </a>`
+                : `<a href="https://wa.me/${script.waNumber}?text=${waMessage}" class="btn btn-beli" target="_blank">
+                       <i class="fab fa-whatsapp"></i> Beli
+                   </a>`;
 
             scriptCard.innerHTML = `
                 ${imgHtml}
@@ -146,14 +151,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span class="badge ${script.badge}">${script.badgeText}</span>
                 </div>
                 <p>${script.description}</p>
+                <div class="script-price">
+                    <i class="fas fa-tag"></i> <strong>${script.price || 'Hubungi Admin'}</strong>
+                </div>
                 <div class="script-features">${featuresHtml}</div>
                 <div class="script-links">
                     <a href="${script.youtubeLink}" class="btn-link btn-preview" target="_blank">
                         <i class="fab fa-youtube"></i> Preview
                     </a>
-                    <a href="https://wa.me/${script.waNumber}?text=${waMessage}" class="btn btn-beli" target="_blank">
-                        <i class="fab fa-whatsapp"></i> Beli
-                    </a>
+                    ${buyButtonHtml}
                 </div>
             `;
 
@@ -207,28 +213,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('modalTitle').textContent = 'Edit Script';
         document.getElementById('submitBtnText').textContent = 'Update Script';
-        document.getElementById('editIndex').value = index;
+        document.getElementById('editIndex').value = script.id; // Store ID instead of index
 
         document.getElementById('scriptName').value = script.name;
         document.getElementById('scriptImageUrl').value = script.image || '';
         document.getElementById('scriptBadge').value = script.badge;
         document.getElementById('scriptBadgeText').value = script.badgeText;
         document.getElementById('scriptDesc').value = script.description;
-        document.getElementById('scriptFeatures').value = script.features.join(', ');
+        document.getElementById('scriptFeatures').value = Array.isArray(script.features) ? script.features.join(', ') : script.features;
+        document.getElementById('scriptPrice').value = script.price || '';
         document.getElementById('scriptYoutube').value = script.youtubeLink;
+        document.getElementById('scriptDownload').value = script.downloadLink || '';
         document.getElementById('scriptWaNumber').value = script.waNumber;
 
         document.getElementById('addScriptModal').classList.remove('hidden');
     }
 
     // ====== DELETE SCRIPT ======
-    function deleteScript(index) {
+    async function deleteScript(index) {
         if (confirm('Apakah Anda yakin ingin menghapus script ini?')) {
             const scripts = getScripts();
-            scripts.splice(index, 1);
-            saveScripts(scripts);
-            renderScripts();
-            showNotification('Script berhasil dihapus!', 'success');
+            const script = scripts[index];
+            
+            if (!script || !script.id) {
+                showNotification('Gagal menghapus: ID tidak ditemukan', 'danger');
+                return;
+            }
+
+            try {
+                const { error } = await supabase
+                    .from('scripts')
+                    .delete()
+                    .eq('id', script.id);
+                
+                if (error) throw error;
+
+                showNotification('Script berhasil dihapus!', 'success');
+                fetchScripts();
+            } catch (error) {
+                console.error("Error deleting script:", error);
+                showNotification('Gagal menghapus script', 'danger');
+            }
         }
     }
 
@@ -279,22 +304,32 @@ document.addEventListener('DOMContentLoaded', function() {
         if (adminLoginForm) {
             adminLoginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
+                const username = document.getElementById('adminUsername').value.trim();
                 const password = document.getElementById('adminPassword').value;
                 
                 console.log('Login attempt...');
                 
-                if (password === ADMIN_PASSWORD) {
+                if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
                     sessionStorage.setItem(AUTH_KEY, 'true');
                     document.getElementById('adminLoginModal').classList.add('hidden');
                     document.getElementById('adminLoginForm').reset();
                     showAdminUI();
-                    showNotification('Login berhasil! Sekarang Anda bisa mengelola script.', 'success');
+                    renderScripts();
+                    showNotification('Login berhasil! Selamat datang, ' + username + '!', 'success');
                     console.log('Login success');
                 } else {
-                    showNotification('Password salah! Coba lagi.', 'danger');
-                    console.log('Wrong password');
+                    let errorMsg = 'Username atau password salah!';
+                    if (username !== ADMIN_USERNAME && password !== ADMIN_PASSWORD) {
+                        errorMsg = 'Username dan password salah!';
+                    } else if (username !== ADMIN_USERNAME) {
+                        errorMsg = 'Username salah!';
+                    } else if (password !== ADMIN_PASSWORD) {
+                        errorMsg = 'Password salah!';
+                    }
+                    showNotification(errorMsg, 'danger');
+                    console.log('Login failed:', errorMsg);
                     document.getElementById('adminPassword').value = '';
-                    document.getElementById('adminPassword').focus();
+                    document.getElementById('adminUsername').focus();
                 }
             });
         }
@@ -306,6 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (confirm('Yakin ingin logout?')) {
                     sessionStorage.removeItem(AUTH_KEY);
                     hideAdminUI();
+                    renderScripts();
                     showNotification('Logout berhasil!', 'success');
                 }
             });
@@ -335,37 +371,51 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add/Edit script form
         const addScriptForm = document.getElementById('addScriptForm');
         if (addScriptForm) {
-            addScriptForm.addEventListener('submit', function(e) {
+            addScriptForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
-                const editIndex = document.getElementById('editIndex').value;
+                const scriptId = document.getElementById('editIndex').value;
                 const newScript = {
                     name: document.getElementById('scriptName').value.trim(),
-                    image: document.getElementById('scriptImageUrl').value.trim() || 'https://via.placeholder.com/300x180',
+                    image: document.getElementById('scriptImageUrl').value.trim() || 'https://placehold.co/300x180/e0e0e0/666666/png?text=Script+Image',
                     badge: document.getElementById('scriptBadge').value,
                     badgeText: document.getElementById('scriptBadgeText').value.trim(),
                     description: document.getElementById('scriptDesc').value.trim(),
                     features: document.getElementById('scriptFeatures').value.split(',').map(f => f.trim()).filter(f => f),
+                    price: document.getElementById('scriptPrice').value.trim() || 'Hubungi Admin',
                     youtubeLink: document.getElementById('scriptYoutube').value.trim(),
+                    downloadLink: document.getElementById('scriptDownload').value.trim() || '',
                     waNumber: document.getElementById('scriptWaNumber').value.trim()
                 };
 
-                const scripts = getScripts();
-                
-                if (editIndex !== '') {
-                    // Update existing
-                    scripts[parseInt(editIndex)] = newScript;
-                    showNotification('Script berhasil diupdate!', 'success');
-                } else {
-                    // Add new
-                    scripts.push(newScript);
-                    showNotification('Script berhasil ditambahkan!', 'success');
-                }
+                try {
+                    if (scriptId) {
+                        // Update existing
+                        const { error } = await supabase
+                            .from('scripts')
+                            .update(newScript)
+                            .eq('id', scriptId);
+                            
+                        if (error) throw error;
+                        showNotification('Script berhasil diupdate!', 'success');
+                    } else {
+                        // Add new
+                        const { error } = await supabase
+                            .from('scripts')
+                            .insert([newScript]);
+                            
+                        if (error) throw error;
+                        showNotification('Script berhasil ditambahkan!', 'success');
+                    }
 
-                saveScripts(scripts);
-                document.getElementById('addScriptModal').classList.add('hidden');
-                document.getElementById('addScriptForm').reset();
-                renderScripts();
+                    document.getElementById('addScriptModal').classList.add('hidden');
+                    document.getElementById('addScriptForm').reset();
+                    fetchScripts(); // Refresh data from server
+                    
+                } catch (error) {
+                    console.error('Error saving script:', error);
+                    showNotification('Gagal menyimpan script', 'danger');
+                }
             });
         }
 
