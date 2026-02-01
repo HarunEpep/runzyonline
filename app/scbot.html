@@ -8,6 +8,82 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="modal-overlay hidden">
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Admin Access</h2>
+                <p>Login untuk mengelola script</p>
+            </div>
+            <form id="adminLoginForm" class="login-form">
+                <div class="form-group">
+                    <label for="adminPassword">
+                        <i class="fas fa-lock"></i> Password Admin
+                    </label>
+                    <input type="password" id="adminPassword" name="adminPassword" required placeholder="Masukkan password admin">
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            <button id="closeLoginBtn" class="btn-close-login">Tutup</button>
+        </div>
+    </div>
+
+    <!-- Add/Edit Script Modal -->
+    <div id="addScriptModal" class="modal-overlay hidden">
+        <div class="add-script-container">
+            <div class="modal-header">
+                <h2 id="modalTitle">Tambah Script Baru</h2>
+                <button type="button" class="btn-close" id="closeAddScriptBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addScriptForm" class="add-script-form">
+                <input type="hidden" id="editIndex" value="">
+                <div class="form-group">
+                    <label for="scriptName">Nama Script</label>
+                    <input type="text" id="scriptName" required placeholder="Contoh: Baileys Simple Bot">
+                </div>
+                <div class="form-group">
+                    <label for="scriptImageUrl">Link Gambar</label>
+                    <input type="url" id="scriptImageUrl" placeholder="https://link-gambar.com/gambar.jpg">
+                </div>
+                <div class="form-group">
+                    <label for="scriptBadge">Badge</label>
+                    <select id="scriptBadge" required>
+                        <option value="badge-new">Populer</option>
+                        <option value="badge-hot">Hot</option>
+                        <option value="badge-updated">Update</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="scriptBadgeText">Text Badge</label>
+                    <input type="text" id="scriptBadgeText" required placeholder="Contoh: Populer, Hot, Update">
+                </div>
+                <div class="form-group">
+                    <label for="scriptDesc">Deskripsi</label>
+                    <textarea id="scriptDesc" required placeholder="Deskripsi singkat tentang script"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="scriptFeatures">Fitur (pisahkan dengan koma)</label>
+                    <input type="text" id="scriptFeatures" required placeholder="Fitur 1, Fitur 2, Fitur 3">
+                </div>
+                <div class="form-group">
+                    <label for="scriptYoutube">Link YouTube Preview</label>
+                    <input type="url" id="scriptYoutube" required placeholder="https://youtube.com/...">
+                </div>
+                <div class="form-group">
+                    <label for="scriptWaNumber">Nomor WhatsApp (tanpa +)</label>
+                    <input type="text" id="scriptWaNumber" required placeholder="6285194572459">
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> <span id="submitBtnText">Tambah Script</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
@@ -15,14 +91,291 @@
                 <i class="fas fa-arrow-left"></i> Kembali
             </a>
             <h1 class="nav-title">Script Bot Collection</h1>
+            <div class="nav-actions">
+                <button id="adminLoginToggle" class="btn-admin-access">
+                    <i class="fas fa-lock"></i> Admin
+                </button>
+                <button id="logoutBtn" class="btn-logout hidden">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
         </div>
     </nav>
 
-    <!-- Daftar Script Dinamis -->
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel hidden">
+        <button id="addScriptBtn" class="btn-add-script">
+            <i class="fas fa-plus-circle"></i> Tambah Script Baru
+        </button>
+    </div>
+
+    <!-- Daftar Script -->
     <section id="scriptListSection">
-        <h2>Daftar Script</h2>
+        <h2>Daftar Script Bot</h2>
         <div id="scriptListContainer">
-            <!-- Script akan dirender di sini -->
+            <!-- Script akan di-render otomatis dari scripts-data.js -->
+        </div>
+    </section>
+            <!--
+            <div class="script-card">
+                <div class="script-img-wrap">
+                    <img src="https://via.placeholder.com/300x180" alt="Baileys WhatsApp Bot" class="script-img">
+                </div>
+                <div class="script-header">
+                    <h3>Baileys WhatsApp Bot</h3>
+                    <span class="badge badge-new">New</span>
+                </div>
+                <p>Bot Tele gacha</p>
+                <div class="script-features">
+                    <span><i class="fas fa-check"></i> Multi-Device Support</span>
+                    <span><i class="fas fa-check"></i> Auto Reply</span>
+                    <span><i class="fas fa-check"></i> Download Media</span>
+                </div>
+                <div class="script-links">
+                    <a href="https://youtube.com/@runzynglz" class="btn-link btn-preview" target="_blank">
+                        <i class="fab fa-youtube"></i> Preview
+                    </a>
+                    <a href="https://wa.me/6285194572459?text=Halo%20saya%20mau%20beli%20script%20Baileys%20WhatsApp%20Bot" class="btn btn-beli" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Beli
+                    </a>
+                </div>
+            </div>
+
+            
+            ============================================
+            SCRIPT 2-10 DINONAKTIFKAN SEMENTARA
+            ============================================
+            
+            Script 2
+            <div class="script-card">
+                <div class="script-img-wrap">
+                    <img src="https://via.placeholder.com/300x180" alt="Telegram Bot Advanced" class="script-img">
+                </div>
+                <div class="script-header">
+                    <h3>Telegram Bot Advanced</h3>
+                    <span class="badge badge-hot">Hot</span>
+                </div>
+                <p>Bot Telegram dengan fitur admin panel dan database</p>
+                <div class="script-features">
+                    <span><i class="fas fa-check"></i> Admin Panel</span>
+                    <span><i class="fas fa-check"></i> Database MySQL</span>
+                    <span><i class="fas fa-check"></i> Auto Broadcast</span>
+                </div>
+                <div class="script-links">
+                    <a href="https://youtube.com/@runzynglz" class="btn-link btn-preview" target="_blank">
+                        <i class="fab fa-youtube"></i> Preview
+                    </a>
+                    <a href="https://wa.me/6285194572459?text=Halo%20saya%20mau%20beli%20script%20Telegram%20Bot%20Advanced" class="btn btn-beli" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Beli
+                    </a>
+                </div>
+            </div>
+
+            Script 3
+            <div class="script-card">
+                <div class="script-img-wrap">
+                    <img src="https://via.placeholder.com/300x180" alt="Discord Music Bot" class="script-img">
+                </div>
+                <div class="script-header">
+                    <h3>Discord Music Bot</h3>
+                    <span class="badge badge-updated">Update</span>
+                </div>
+                <p>Bot Discord untuk memutar musik dengan kualitas HD</p>
+                <div class="script-features">
+                    <span><i class="fas fa-check"></i> HD Audio Quality</span>
+                    <span><i class="fas fa-check"></i> Queue System</span>
+                    <span><i class="fas fa-check"></i> Playlist Support</span>
+                </div>
+                <div class="script-links">
+                    <a href="https://youtube.com/@runzynglz" class="btn-link btn-preview" target="_blank">
+                        <i class="fab fa-youtube"></i> Preview
+                    </a>
+                    <a href="https://wa.me/6285194572459?text=Halo%20saya%20mau%20beli%20script%20Discord%20Music%20Bot" class="btn btn-beli" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Beli
+                    </a>
+                </div>
+            </div>
+
+            Script 4
+            <div class="script-card">
+                <div class="script-img-wrap">
+                    <img src="https://via.placeholder.com/300x180" alt="WhatsApp Business Bot" class="script-img">
+                </div>
+                <div class="script-header">
+                    <h3>WhatsApp Business Bot</h3>
+                    <span class="badge badge-new">Populer</span>
+                </div>
+                <p>Bot khusus untuk bisnis dengan fitur CRM terintegrasi</p>
+                <div class="script-features">
+                    <span><i class="fas fa-check"></i> CRM System</span>
+                    <span><i class="fas fa-check"></i> Auto Catalog</span>
+                    <span><i class="fas fa-check"></i> Payment Gateway</span>
+                </div>
+                <div class="script-links">
+                    <a href="https://youtube.com/@runzynglz" class="btn-link btn-preview" target="_blank">
+                        <i class="fab fa-youtube"></i> Preview
+                    </a>
+                    <a href="https://wa.me/6285194572459?text=Halo%20saya%20mau%20beli%20script%20WhatsApp%20Business%20Bot" class="btn btn-beli" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Beli
+                    </a>
+                </div>
+            </div>
+
+            Script 5
+            <div class="script-card">
+                <div class="script-img-wrap">
+                    <img src="https://via.placeholder.com/300x180" alt="Instagram Auto DM Bot" class="script-img">
+                </div>
+                <div class="script-header">
+                    <h3>Instagram Auto DM Bot</h3>
+                    <span class="badge badge-hot">Hot</span>
+                </div>
+                <p>Bot untuk mengirim DM otomatis ke follower Instagram</p>
+                <div class="script-features">
+                    <span><i class="fas fa-check"></i> Auto DM</span>
+                    <span><i class="fas fa-check"></i> Follow/Unfollow</span>
+                    <span><i class="fas fa-check"></i> Like & Comment</span>
+                </div>
+                <div class="script-links">
+                    <a href="https://youtube.com/@runzynglz" class="btn-link btn-preview" target="_blank">
+                        <i class="fab fa-youtube"></i> Preview
+                    </a>
+                    <a href="https://wa.me/6285194572459?text=Halo%20saya%20mau%20beli%20script%20Instagram%20Auto%20DM%20Bot" class="btn btn-beli" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Beli
+                    </a>
+                </div>
+            </div>
+
+            Script 6
+            <div class="script-card">
+                <div class="script-img-wrap">
+                    <img src="https://via.placeholder.com/300x180" alt="AI ChatBot GPT" class="script-img">
+                </div>
+                <div class="script-header">
+                    <h3>AI ChatBot GPT</h3>
+                    <span class="badge badge-new">Populer</span>
+                </div>
+                <p>Bot dengan kecerdasan buatan menggunakan OpenAI GPT</p>
+                <div class="script-features">
+                    <span><i class="fas fa-check"></i> GPT-4 Integration</span>
+                    <span><i class="fas fa-check"></i> Context Memory</span>
+                    <span><i class="fas fa-check"></i> Multi-Language</span>
+                </div>
+                <div class="script-links">
+                    <a href="https://youtube.com/@runzynglz" class="btn-link btn-preview" target="_blank">
+                        <i class="fab fa-youtube"></i> Preview
+                    </a>
+                    <a href="https://wa.me/6285194572459?text=Halo%20saya%20mau%20beli%20script%20AI%20ChatBot%20GPT" class="btn btn-beli" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Beli
+                    </a>
+                </div>
+            </div>
+
+            Script 7
+            <div class="script-card">
+                <div class="script-img-wrap">
+                    <img src="https://via.placeholder.com/300x180" alt="Twitter Auto Post Bot" class="script-img">
+                </div>
+                <div class="script-header">
+                    <h3>Twitter Auto Post Bot</h3>
+                    <span class="badge badge-updated">Update</span>
+                </div>
+                <p>Bot untuk posting otomatis ke Twitter dengan jadwal</p>
+                <div class="script-features">
+                    <span><i class="fas fa-check"></i> Schedule Posts</span>
+                    <span><i class="fas fa-check"></i> Auto Retweet</span>
+                    <span><i class="fas fa-check"></i> Analytics</span>
+                </div>
+                <div class="script-links">
+                    <a href="https://youtube.com/@runzynglz" class="btn-link btn-preview" target="_blank">
+                        <i class="fab fa-youtube"></i> Preview
+                    </a>
+                    <a href="https://wa.me/6285194572459?text=Halo%20saya%20mau%20beli%20script%20Twitter%20Auto%20Post%20Bot" class="btn btn-beli" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Beli
+                    </a>
+                </div>
+            </div>
+
+            Script 8
+            <div class="script-card">
+                <div class="script-img-wrap">
+                    <img src="https://via.placeholder.com/300x180" alt="Facebook Page Manager Bot" class="script-img">
+                </div>
+                <div class="script-header">
+                    <h3>Facebook Page Manager Bot</h3>
+                    <span class="badge badge-hot">Hot</span>
+                </div>
+                <p>Bot untuk mengelola halaman Facebook secara otomatis</p>
+                <div class="script-features">
+                    <span><i class="fas fa-check"></i> Auto Reply Messenger</span>
+                    <span><i class="fas fa-check"></i> Post Scheduler</span>
+                    <span><i class="fas fa-check"></i> Comment Manager</span>
+                </div>
+                <div class="script-links">
+                    <a href="https://youtube.com/@runzynglz" class="btn-link btn-preview" target="_blank">
+                        <i class="fab fa-youtube"></i> Preview
+                    </a>
+                    <a href="https://wa.me/6285194572459?text=Halo%20saya%20mau%20beli%20script%20Facebook%20Page%20Manager%20Bot" class="btn btn-beli" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Beli
+                    </a>
+                </div>
+            </div>
+
+            Script 9
+            <div class="script-card">
+                <div class="script-img-wrap">
+                    <img src="https://via.placeholder.com/300x180" alt="TikTok Auto Upload Bot" class="script-img">
+                </div>
+                <div class="script-header">
+                    <h3>TikTok Auto Upload Bot</h3>
+                    <span class="badge badge-new">Populer</span>
+                </div>
+                <p>Bot untuk upload video TikTok otomatis dengan jadwal</p>
+                <div class="script-features">
+                    <span><i class="fas fa-check"></i> Auto Upload Video</span>
+                    <span><i class="fas fa-check"></i> Hashtag Generator</span>
+                    <span><i class="fas fa-check"></i> Views Analytics</span>
+                </div>
+                <div class="script-links">
+                    <a href="https://youtube.com/@runzynglz" class="btn-link btn-preview" target="_blank">
+                        <i class="fab fa-youtube"></i> Preview
+                    </a>
+                    <a href="https://wa.me/6285194572459?text=Halo%20saya%20mau%20beli%20script%20TikTok%20Auto%20Upload%20Bot" class="btn btn-beli" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Beli
+                    </a>
+                </div>
+            </div>
+
+            Script 10
+            <div class="script-card">
+                <div class="script-img-wrap">
+                    <img src="https://via.placeholder.com/300x180" alt="Multi-Platform Bot Manager" class="script-img">
+                </div>
+                <div class="script-header">
+                    <h3>Multi-Platform Bot Manager</h3>
+                    <span class="badge badge-hot">Hot</span>
+                </div>
+                <p>Dashboard untuk mengelola semua bot dari satu tempat</p>
+                <div class="script-features">
+                    <span><i class="fas fa-check"></i> Unified Dashboard</span>
+                    <span><i class="fas fa-check"></i> All Platform Support</span>
+                    <span><i class="fas fa-check"></i> Real-time Monitor</span>
+                </div>
+                <div class="script-links">
+                    <a href="https://youtube.com/@runzynglz" class="btn-link btn-preview" target="_blank">
+                        <i class="fab fa-youtube"></i> Preview
+                    </a>
+                    <a href="https://wa.me/6285194572459?text=Halo%20saya%20mau%20beli%20script%20Multi-Platform%20Bot%20Manager" class="btn btn-beli" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Beli
+                    </a>
+                </div>
+            </div>
+            
+            ============================================
+            AKHIR SCRIPT YANG DINONAKTIFKAN
+            ============================================
+            -->
+
         </div>
     </section>
 
@@ -33,6 +386,7 @@
         </div>
     </footer>
 
-    <script type="module" src="scscript.js"></script>
+    <!-- Load Script utama -->
+    <script src="scscript.js"></script>
 </body>
 </html>
