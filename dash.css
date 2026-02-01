@@ -499,7 +499,86 @@ html {
     font-size: 0.95rem;
 }
 
-/* ===== RESPONSIVE ===== */
+/* ===== TESTIMONIALS SECTION ===== */
+.testimonials-section {
+    padding: 2rem 1.5rem;
+    background-color: #f8f9fa; /* Latar belakang sedikit berbeda agar kontras */
+    margin-bottom: 2rem;
+}
+
+.testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.testimonial-card {
+    background: var(--card-bg); /* Menggunakan variabel yang sudah ada jika ada, atau putih */
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* Bayangan lembut */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.testimonial-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-purple); /* Tambahan border agar lebih cantik */
+}
+
+.profile-info h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+}
+
+.profile-info span {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.testimonial-rating {
+    color: #fbbf24; /* Warna kuning emas untuk bintang */
+    font-size: 0.9rem;
+}
+
+.testimonial-text {
+    color: #4b5563;
+    font-style: italic;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Responsiveness untuk testimonial */
+@media (max-width: 768px) {
+    .testimonial-grid {
+        grid-template-columns: 1fr; /* Satu kolom di HP */
+    }
+}
+
 @media (max-width: 900px) {
     .nav-container {
         padding: 1rem 1rem;

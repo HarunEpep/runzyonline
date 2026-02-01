@@ -2,16 +2,12 @@
 // SCRIPT BOT - ADMIN PANEL SYSTEM
 // ===================================
 
-// Konfigurasi Supabase - SILAKAN GANTI DENGAN PROJECT URL & ANON KEY ANDA
-// Buat table di Supabase bernama 'scripts' dengan kolom:
-// id (int8, primary key), name, image, badge, badgeText, description, features (json/text), price, youtubeLink, waNumber, downloadLink
-const SUPABASE_URL = "https://npwvzkypbhalfmsptlrh.supabase.co"; 
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wd3Z6a3lwYmhhbGZtc3B0bHJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5NTA3OTEsImV4cCI6MjA4NTUyNjc5MX0.RV1uUX-ihfOjjT8cryVUdEqD2uiQcYZSKVSdhNSBowg";
-const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+// Variable Supabase Client
+let supabaseClient = null;
 
-// Admin Credentials (ganti sesuai kebutuhan)
-const ADMIN_USERNAME = "admin@runzy.online";
-const ADMIN_PASSWORD = "admin123";
+// Admin Credentials (default value, will be overwritten by API)
+let ADMIN_USERNAME = "admin";
+let ADMIN_PASSWORD = "admin123";
 
 const AUTH_KEY = "runzy_admin_auth";
 
@@ -19,15 +15,46 @@ const AUTH_KEY = "runzy_admin_auth";
 let localScripts = [];
 
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     console.log('Script loaded successfully!');
     
-    // Initialize
+    // Inisialisasi Supabase dari Environment Variables (Vercel)
+    await initSupabase();
+
+    // Initialize UI
     updateUIBasedOnAuth();
     setupEventListeners();
     fetchScripts(); // Akan memanggil renderScripts setelah data didapat
     
     console.log('Admin button element:', document.getElementById('adminLoginToggle'));
+
+    // ====== INIT SUPABASE ======
+    async function initSupabase() {
+        try {
+            // Mengambil konfigurasi dari API Vercel
+            const response = await fetch('/api/config');
+            if (!response.ok) throw new Error('Gagal mengambil config');
+            
+            const config = await response.json();
+            
+            if (config.SUPABASE_URL && config.SUPABASE_KEY && window.supabase) {
+                supabaseClient = window.supabase.createClient(config.SUPABASE_URL, config.SUPABASE_KEY);
+                console.log("Supabase initialized via API config");
+            } else {
+                console.error("Config Supabase tidak lengkap atau SDK tidak dimuat");
+            }
+
+            // Set Admin Credentials from API if available
+            if (config.ADMIN_USERNAME && config.ADMIN_PASSWORD) {
+                ADMIN_USERNAME = config.ADMIN_USERNAME;
+                ADMIN_PASSWORD = config.ADMIN_PASSWORD;
+                console.log("Admin credentials loaded from config");
+            }
+        } catch (error) {
+            console.error("Error initializing Supabase:", error);
+            console.warn("Pastikan Anda menjalankan project menggunakan 'vercel dev' agar API berfungsi, atau deploy ke Vercel.");
+        }
+    }
 
     // ====== FETCH SCRIPTS FROM SUPABASE ======
     async function fetchScripts() {
@@ -470,5 +497,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
 });
