@@ -10,7 +10,7 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 // Admin Credentials (ganti sesuai kebutuhan)
-const ADMIN_USERNAME = "admin";
+const ADMIN_USERNAME = "admin@runzy.online";
 const ADMIN_PASSWORD = "admin123";
 
 const AUTH_KEY = "runzy_admin_auth";
@@ -470,4 +470,5 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
 });
