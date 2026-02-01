@@ -7,7 +7,7 @@
 // id (int8, primary key), name, image, badge, badgeText, description, features (json/text), price, youtubeLink, waNumber, downloadLink
 const SUPABASE_URL = "https://npwvzkypbhalfmsptlrh.supabase.co"; 
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wd3Z6a3lwYmhhbGZtc3B0bHJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5NTA3OTEsImV4cCI6MjA4NTUyNjc5MX0.RV1uUX-ihfOjjT8cryVUdEqD2uiQcYZSKVSdhNSBowg";
-const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 // Admin Credentials (ganti sesuai kebutuhan)
 const ADMIN_USERNAME = "admin";
@@ -31,13 +31,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ====== FETCH SCRIPTS FROM SUPABASE ======
     async function fetchScripts() {
-        if (!supabase) {
+        if (!supabaseClient) {
             console.error("Supabase client belum diinisialisasi.");
             return;
         }
         
         try {
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClient
                 .from('scripts')
                 .select('*')
                 .order('created_at', { ascending: true });
@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('scripts')
                     .delete()
                     .eq('id', script.id);
@@ -391,7 +391,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try {
                     if (scriptId) {
                         // Update existing
-                        const { error } = await supabase
+                        const { error } = await supabaseClient
                             .from('scripts')
                             .update(newScript)
                             .eq('id', scriptId);
@@ -400,7 +400,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         showNotification('Script berhasil diupdate!', 'success');
                     } else {
                         // Add new
-                        const { error } = await supabase
+                        const { error } = await supabaseClient
                             .from('scripts')
                             .insert([newScript]);
                             
