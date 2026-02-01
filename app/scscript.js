@@ -44,11 +44,15 @@ const defaultScripts = [
 ];
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Script loaded successfully!');
+    
     // Initialize
     initializeData();
     checkAuthStatus();
     setupEventListeners();
     renderScripts();
+    
+    console.log('Admin button element:', document.getElementById('adminLoginToggle'));
 
     // ====== INITIALIZE DATA ======
     function initializeData() {
@@ -230,14 +234,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ====== SETUP EVENT LISTENERS ======
     function setupEventListeners() {
+        console.log('Setting up event listeners...');
+        
         // Admin login toggle
         const adminLoginToggle = document.getElementById('adminLoginToggle');
+        console.log('Admin toggle button found:', adminLoginToggle);
+        
         if (adminLoginToggle) {
-            adminLoginToggle.addEventListener('click', function() {
-                console.log('Admin button clicked');
-                document.getElementById('adminLoginModal').classList.remove('hidden');
-                document.getElementById('adminPassword').focus();
+            // Remove any existing listeners
+            const newBtn = adminLoginToggle.cloneNode(true);
+            adminLoginToggle.parentNode.replaceChild(newBtn, adminLoginToggle);
+            
+            newBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Admin button clicked!');
+                const modal = document.getElementById('adminLoginModal');
+                console.log('Modal element:', modal);
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    const passwordField = document.getElementById('adminPassword');
+                    if (passwordField) {
+                        setTimeout(() => passwordField.focus(), 100);
+                    }
+                }
             });
+            console.log('Admin button event listener attached');
+        } else {
+            console.error('Admin button not found!');
         }
 
         // Close login modal

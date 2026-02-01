@@ -374,6 +374,13 @@ html {
     display: flex;
     gap: 0.8rem;
     align-items: center;
+    z-index: 100;
+    position: relative;
+}
+
+.nav-actions button {
+    pointer-events: auto !important;
+    cursor: pointer !important;
 }
 
 .nav-brand {
@@ -420,6 +427,9 @@ html {
     gap: 0.5rem;
     white-space: nowrap;
     font-size: 0.9rem;
+    z-index: 100;
+    position: relative;
+    pointer-events: auto;
 }
 
 .btn-admin-access:hover,
@@ -428,6 +438,11 @@ html {
     color: var(--primary-purple);
     border-color: var(--white);
     transform: translateY(-2px);
+}
+
+.btn-admin-access:active,
+.btn-logout:active {
+    transform: translateY(0);
 }
 
 /* ===== ADMIN PANEL ===== */
